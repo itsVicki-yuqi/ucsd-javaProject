@@ -63,6 +63,7 @@ public class CityMarker extends CommonMarker {
 	}
 	
 	public void drawMarker(PGraphics pg, float x, float y) {
+		
 	}
 	
 	
