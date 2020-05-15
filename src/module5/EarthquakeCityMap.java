@@ -170,6 +170,71 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		if(lastClicked != null) {
+			if(lastSelected != null) {
+				lastSelected.setSelected(false);
+				lastSelected = null;
+			}
+			unhideMarkers();
+			lastClicked.setClicked(false);
+			lastClicked = null;
+		}else if(lastClicked == null) {
+			checkClickedMarkers(quakeMarkers);
+			checkClickedMarkers(cityMarkers);
+			if(lastClicked instanceof EarthquakeMarker) {
+				hideCityMarkers(cityMarkers);
+				hideOtherMarkers(quakeMarkers);
+			}else if(lastClicked instanceof CityMarker) {
+				hideQuakeMarkers(quakeMarkers);
+				hideOtherMarkers(cityMarkers);
+			}
+			
+		}
+		
+	}
+	private void checkClickedMarkers(List<Marker> markers) {
+		if(lastClicked != null) return;
+		for(Marker marker : markers) {
+			if(! marker.isHidden() && marker.isInside(map, mouseX, mouseY)){
+				lastClicked = (CommonMarker) marker;
+				lastClicked.setClicked(true);
+				break;
+			}
+		}
+		
+		
+	}
+	
+	private void hideCityMarkers(List<Marker> cityMarkers) {
+		for(Marker cityMarker : cityMarkers) {
+			if(isThreaded(cityMarker, (EarthquakeMarker) lastClicked)) {
+				cityMarker.setHidden(false);
+			}else {
+				cityMarker.setHidden(true);
+			}
+		}
+	}
+	private void hideQuakeMarkers(List<Marker> quakeMarkers) {
+		for(Marker quakeMarker : quakeMarkers) {
+			if(isCovered(quakeMarker, (CityMarker) lastClicked)) {
+				quakeMarker.setHidden(false);
+			}else {
+				quakeMarker.setHidden(true);
+			}
+		}
+	}
+	private void hideOtherMarkers(List<Marker> markers) {
+		for(Marker marker : markers) {
+			if(marker != lastClicked) {
+				marker.setHidden(true);
+			}
+		}
+	}
+	private boolean isCovered(Marker quake, CityMarker lastClicked) {
+		return quake.getDistanceTo(lastClicked.getLocation()) < ((EarthquakeMarker) quake).threatCircle();
+	}
+	private boolean isThreaded(Marker city, EarthquakeMarker lastClickedThread) {
+		return city.getDistanceTo(lastClickedThread.getLocation()) < lastClickedThread.threatCircle();
 	}
 	
 	
