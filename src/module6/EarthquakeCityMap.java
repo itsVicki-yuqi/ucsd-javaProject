@@ -85,7 +85,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		//earthquakesURL = "quiz2.atom";
+		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -125,6 +125,8 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(cityMarkers);
 	    
 	    
+	    sortAndPrint(20);
+	    
 	}  // End setup
 	
 	
@@ -137,7 +139,17 @@ public class EarthquakeCityMap extends PApplet {
 	
 	
 	// TODO: Add the method:
-	//   private void sortAndPrint(int numToPrint)
+	private void sortAndPrint(int numToPrint) {
+		Object[] quakes = quakeMarkers.toArray();
+		Arrays.sort(quakes);
+		
+		int limit = numToPrint > quakes.length ? quakes.length : numToPrint;
+		
+		for(int i = 0; i < limit; i++) {
+			System.out.println(quakes[i]);
+		}
+		
+	}
 	// and then call that method from setUp
 	
 	/** Event handler that gets called automatically when the 
